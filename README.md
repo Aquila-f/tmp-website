@@ -57,3 +57,17 @@ caption: Optional caption
 location: Optional location
 ---
 ```
+
+## Reading notes
+
+Book and topic notes live in the `reading` content collection. Each series has an overview and each article keeps its own images:
+
+```text
+src/content/reading/<series>/
+├── index.md
+└── <ordered-article>/
+    ├── index.md
+    └── images/
+```
+
+Series are listed at `/blog/`, with generated series and article routes beneath it. Article order comes from the frontmatter `order` field.

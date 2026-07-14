@@ -1,0 +1,44 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ReadingLayout from '../../../layouts/ReadingLayout.astro';
+import { getArticleSlug, isArticle, isSeries, sortArticles } from '../../../lib/reading';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('reading');
+  const seriesEntries = entries.filter(isSeries);
+  const articles = entries.filter(isArticle);
+
+  return articles.map((article) => {
+    const siblings = sortArticles(articles.filter((entry) => entry.data.series === article.data.series));
+    const index = siblings.findIndex((entry) => entry.id === article.id);
+    const series = seriesEntries.find((entry) => entry.data.series === article.data.series);
+
+    if (!series) throw new Error(`Missing series entry: ${article.data.series}`);
+
+    return {
+      params: {
+        series: article.data.series,
+        slug: getArticleSlug(article),
+      },
+      props: {
+        article,
+        seriesTitle: series.data.title,
+        previous: siblings[index - 1],
+        next: siblings[index + 1],
+      },
+    };
+  });
+}
+
+const { article, seriesTitle, previous, next } = Astro.props as {
+  article: CollectionEntry<'reading'>;
+  seriesTitle: string;
+  previous?: CollectionEntry<'reading'>;
+  next?: CollectionEntry<'reading'>;
+};
+const { Content } = await render(article);
+---
+
+<ReadingLayout {article} {seriesTitle} {previous} {next}>
+  <Content />
+</ReadingLayout>

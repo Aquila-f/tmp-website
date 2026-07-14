@@ -1,0 +1,120 @@
+---
+import type { ReadingEntry } from '../../lib/reading';
+import { formatReadingDate, getSeriesHref } from '../../lib/reading';
+
+const {
+  series,
+  count,
+  latest,
+  index,
+} = Astro.props as {
+  series: ReadingEntry;
+  count: number;
+  latest?: Date;
+  index: number;
+};
+---
+
+<a class="series-card" href={getSeriesHref(series.data.series)}>
+  <span class="number">{String(index + 1).padStart(2, '0')}</span>
+
+  <div class="copy">
+    <p class="kind">Reading series</p>
+    <h2>{series.data.title}</h2>
+    {series.data.description && <p class="description">{series.data.description}</p>}
+  </div>
+
+  <div class="meta">
+    <span>{String(count).padStart(2, '0')} notes</span>
+    <span>Updated {formatReadingDate(latest)}</span>
+  </div>
+
+  <span class="arrow" aria-hidden="true">↗</span>
+</a>
+
+<style>
+  .series-card {
+    align-items: start;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 3rem);
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto 1rem;
+    padding: clamp(2rem, 4vw, 3.75rem) 0;
+    text-decoration: none;
+  }
+
+  .series-card:first-child {
+    border-top: 1px solid var(--ink);
+  }
+
+  .number,
+  .kind,
+  .meta,
+  .arrow {
+    color: var(--muted);
+    font-size: 0.66rem;
+  }
+
+  .kind {
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.6vw, 3.6rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    margin-bottom: 1rem;
+    transition: color 180ms ease;
+  }
+
+  .description {
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 600px;
+  }
+
+  .meta {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 1.5rem;
+    white-space: nowrap;
+  }
+
+  .arrow {
+    color: var(--ink);
+    font-size: 0.9rem;
+    padding-top: 1.4rem;
+    transition: transform 180ms ease;
+  }
+
+  .series-card:hover h2 {
+    color: var(--accent);
+  }
+
+  .series-card:hover .arrow {
+    transform: translate(3px, -3px);
+  }
+
+  @media (max-width: 700px) {
+    .series-card {
+      grid-template-columns: 2rem minmax(0, 1fr) 1rem;
+    }
+
+    .meta {
+      display: flex;
+      grid-column: 2;
+      padding-top: 0;
+    }
+
+    .arrow {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+</style>

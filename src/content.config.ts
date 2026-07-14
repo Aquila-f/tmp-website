@@ -14,4 +14,22 @@ const photos = defineCollection({
   }),
 });
 
-export const collections = { photos };
+const reading = defineCollection({
+  loader: glob({
+    base: './src/content/reading',
+    pattern: '**/index.md',
+    generateId: ({ entry }) => entry.replace(/\/index\.md$/, ''),
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    type: z.enum(['series', 'article']),
+    series: z.string(),
+    order: z.number().optional(),
+    date: z.coerce.date().optional(),
+    author: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { photos, reading };

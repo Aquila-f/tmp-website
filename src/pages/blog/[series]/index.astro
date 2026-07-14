@@ -1,0 +1,175 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {
+  formatReadingDate,
+  getArticleHref,
+  isArticle,
+  isSeries,
+  sortArticles,
+} from '../../../lib/reading';
+import { withBase } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('reading');
+  const articles = entries.filter(isArticle);
+
+  return entries.filter(isSeries).map((series) => ({
+    params: { series: series.data.series },
+    props: {
+      series,
+      articles: sortArticles(articles.filter((article) => article.data.series === series.data.series)),
+    },
+  }));
+}
+
+const { series, articles } = Astro.props as {
+  series: CollectionEntry<'reading'>;
+  articles: CollectionEntry<'reading'>[];
+};
+const { Content } = await render(series);
+---
+
+<BaseLayout
+  title={`${series.data.title} — Aquila`}
+  description={series.data.description}
+  current="/blog"
+>
+  <header class="series-header">
+    <a class="back" href={withBase('/blog/')}>← All reading notes</a>
+    <p class="eyebrow">Reading series · {String(articles.length).padStart(2, '0')} notes</p>
+    <h1>{series.data.title}</h1>
+    {series.data.description && <p class="summary">{series.data.description}</p>}
+  </header>
+
+  <div class="series-overview">
+    <Content />
+  </div>
+
+  <section class="article-list" aria-label={`${series.data.title} notes`}>
+    {articles.map((article) => (
+      <a href={getArticleHref(article)}>
+        <span class="order">{String(article.data.order).padStart(2, '0')}</span>
+        <div>
+          <h2>{article.data.title}</h2>
+          {article.data.description && <p>{article.data.description}</p>}
+        </div>
+        <time datetime={article.data.date?.toISOString()}>{formatReadingDate(article.data.date)}</time>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .series-header {
+    margin: clamp(4rem, 10vw, 8rem) 0 clamp(3rem, 6vw, 5rem);
+    max-width: 1080px;
+  }
+
+  .back {
+    color: var(--muted);
+    display: inline-block;
+    font-size: 0.68rem;
+    margin-bottom: clamp(3rem, 7vw, 6rem);
+    text-decoration: none;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7.5rem);
+    font-weight: 400;
+    letter-spacing: -0.06em;
+    line-height: 0.94;
+    margin-bottom: 1.5rem;
+  }
+
+  .summary {
+    color: var(--muted);
+    font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+    line-height: 1.75;
+    max-width: 620px;
+  }
+
+  .series-overview {
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    display: grid;
+    font-size: 0.75rem;
+    gap: 1rem 3rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    line-height: 1.7;
+    margin-bottom: clamp(4rem, 8vw, 7rem);
+    max-width: 900px;
+    padding-top: 1.25rem;
+  }
+
+  .series-overview :global(h2) {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 0.65rem;
+  }
+
+  .article-list {
+    border-top: 1px solid var(--ink);
+  }
+
+  .article-list > a {
+    align-items: start;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto 1rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+    text-decoration: none;
+  }
+
+  .order,
+  time,
+  .arrow,
+  .article-list p {
+    color: var(--muted);
+    font-size: 0.66rem;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.7vw, 2.5rem);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin-bottom: 0.65rem;
+    transition: color 180ms ease;
+  }
+
+  .article-list p {
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  time,
+  .arrow {
+    padding-top: 0.45rem;
+    white-space: nowrap;
+  }
+
+  .article-list a:hover h2 {
+    color: var(--accent);
+  }
+
+  @media (max-width: 650px) {
+    .series-overview {
+      grid-template-columns: 1fr;
+    }
+
+    .article-list > a {
+      grid-template-columns: 2rem minmax(0, 1fr) 1rem;
+    }
+
+    time {
+      display: none;
+    }
+  }
+</style>
