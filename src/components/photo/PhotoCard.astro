@@ -1,0 +1,130 @@
+---
+import { Image } from 'astro:assets';
+import type { Photo } from '../../lib/photos';
+
+const { photo } = Astro.props as { photo: Photo };
+---
+
+<figure>
+  <div class="image-frame" tabindex="0">
+    <Image
+      src={photo.image}
+      alt={photo.alt}
+      width={1200}
+      height={1200}
+      widths={[480, 720, 960, 1200]}
+      sizes="(max-width: 680px) 92vw, (max-width: 1000px) 46vw, 22vw"
+      fit="cover"
+      format="webp"
+      quality={82}
+      loading="lazy"
+    />
+
+    <ul class="specs" aria-label="Photo settings">
+      <li aria-label={`Aperture: ${photo.aperture}`}>{photo.aperture}</li>
+      <li aria-label={`Focal length: ${photo.focalLength}`}>{photo.focalLength}</li>
+      <li aria-label={`Shutter: ${photo.shutter}`}>{photo.shutter}</li>
+    </ul>
+  </div>
+
+  <figcaption>
+    {(photo.caption || photo.location) && (
+      <div class="editorial">
+        {photo.caption && <p>{photo.caption}</p>}
+        {photo.location && <p>{photo.location}</p>}
+      </div>
+    )}
+    <time datetime={photo.date.replaceAll('.', '-')}>{photo.date}</time>
+  </figcaption>
+</figure>
+
+<style>
+  figure {
+    margin: 0;
+  }
+
+  .image-frame {
+    aspect-ratio: 1;
+    background: #e5e0d6;
+    overflow: hidden;
+    outline: none;
+    position: relative;
+  }
+
+  .image-frame :global(img) {
+    height: 100%;
+    object-fit: cover;
+    transition: filter 400ms ease, transform 700ms cubic-bezier(.2, .8, .2, 1);
+    width: 100%;
+  }
+
+  figure:hover .image-frame :global(img),
+  .image-frame:focus-visible :global(img) {
+    filter: brightness(0.96) saturate(1.04);
+    transform: scale(1.012);
+  }
+
+  .image-frame:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--paper);
+  }
+
+  .specs {
+    align-items: center;
+    backdrop-filter: blur(6px);
+    background: rgba(244, 240, 230, 0.72);
+    bottom: 0.6rem;
+    display: flex;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    opacity: 0;
+    padding: 0.52rem 0.65rem;
+    position: absolute;
+    right: 0.6rem;
+    transform: translateY(7px);
+    transition: opacity 220ms ease, transform 300ms cubic-bezier(.2, .8, .2, 1);
+  }
+
+  .specs li {
+    font-size: 0.58rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .specs li + li::before {
+    color: var(--muted);
+    content: '·';
+    margin: 0 0.42rem;
+  }
+
+  figure:hover .specs,
+  .image-frame:focus-visible .specs {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  figcaption {
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.68rem;
+    padding-top: 0.85rem;
+  }
+
+  .editorial {
+    display: flex;
+    font-size: 0.72rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .editorial p {
+    margin: 0;
+  }
+
+  @media (hover: none) {
+    .specs {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
