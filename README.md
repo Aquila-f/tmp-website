@@ -23,6 +23,14 @@ In the repository settings, set **Pages → Build and deployment → Source** to
 
 ## Photos
 
+Import a JPEG with the photo helper:
+
+```sh
+npm run photo:add -- /path/to/photo.jpg
+```
+
+The command creates the photo entry, limits the longest edge to 2400px, writes an 85-quality JPEG, and preserves EXIF metadata. Keep full-resolution originals outside this repository.
+
 Each photo lives with one minimal Markdown entry:
 
 ```text
