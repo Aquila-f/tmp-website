@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/url';
 ---
 
 <BaseLayout current="/">
@@ -13,7 +14,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p>
         I make thoughtful things for the web, write down what I learn, and carry a camera wherever I go.
       </p>
-      <a class="text-link" href="/portfolio">See selected work <span>↗</span></a>
+      <a class="text-link" href={withBase('/portfolio')}>See selected work <span>↗</span></a>
     </div>
   </section>
 
@@ -23,15 +24,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <h2 id="notes-title">A quiet collection<br />of things that matter.</h2>
     </div>
     <div class="note-list">
-      <a href="/blog">
+      <a href={withBase('/blog')}>
         <span>Writing about design, code, and the in-between</span>
         <span>Blog ↗</span>
       </a>
-      <a href="/portfolio">
+      <a href={withBase('/portfolio')}>
         <span>Building useful, human digital experiences</span>
         <span>Work ↗</span>
       </a>
-      <a href="/photo">
+      <a href={withBase('/photo')}>
         <span>Keeping fragments of places I pass through</span>
         <span>Photo ↗</span>
       </a>

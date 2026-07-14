@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/url';
+
 const { current = '/' } = Astro.props;
 
 const links = [
@@ -10,12 +12,12 @@ const links = [
 ---
 
 <header class="site-header">
-  <a class="mark" href="/" aria-label="Aquila — home">A<span>Q</span></a>
+  <a class="mark" href={withBase('/')} aria-label="Aquila — home">A<span>Q</span></a>
 
   <nav aria-label="Main navigation">
     {
       links.map(({ href, label }) => (
-        <a href={href} aria-current={current === href ? 'page' : undefined}>
+        <a href={withBase(href)} aria-current={current === href ? 'page' : undefined}>
           {label}
         </a>
       ))
