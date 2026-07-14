@@ -1,0 +1,96 @@
+---
+const { current = '/' } = Astro.props;
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/photo', label: 'Photo' },
+];
+---
+
+<header class="site-header">
+  <a class="mark" href="/" aria-label="Aquila — home">A<span>Q</span></a>
+
+  <nav aria-label="Main navigation">
+    {
+      links.map(({ href, label }) => (
+        <a href={href} aria-current={current === href ? 'page' : undefined}>
+          {label}
+        </a>
+      ))
+    }
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem 0;
+  }
+
+  .mark {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.08em;
+    text-decoration: none;
+  }
+
+  .mark span {
+    color: var(--accent);
+  }
+
+  nav {
+    display: flex;
+    gap: clamp(1.2rem, 3vw, 2.75rem);
+  }
+
+  nav a {
+    color: var(--muted);
+    font-size: 0.85rem;
+    position: relative;
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+
+  nav a::after {
+    background: var(--ink);
+    bottom: -0.45rem;
+    content: '';
+    height: 1px;
+    left: 0;
+    position: absolute;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 180ms ease;
+    width: 100%;
+  }
+
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--ink);
+  }
+
+  nav a:hover::after,
+  nav a[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  @media (max-width: 560px) {
+    .site-header {
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    nav {
+      display: grid;
+      gap: 0.65rem 1.35rem;
+      grid-template-columns: repeat(2, auto);
+    }
+  }
+</style>

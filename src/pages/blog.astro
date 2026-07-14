@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = [
+  { date: '2026.07.08', title: 'Making a place of your own on the internet', topic: 'Notes' },
+  { date: '2026.05.21', title: 'The small details that make interfaces feel calm', topic: 'Design' },
+  { date: '2026.02.14', title: 'Things I learned by carrying a camera every day', topic: 'Life' },
+];
+---
+
+<BaseLayout title="Blog — Aquila" current="/blog">
+  <header class="page-intro">
+    <p class="eyebrow">Field notes · 2026</p>
+    <h1>Blog</h1>
+    <p class="summary">Occasional notes on design, technology, places, and the quiet observations in between.</p>
+  </header>
+
+  <section class="post-list" aria-label="Articles">
+    {posts.map((post, index) => (
+      <article>
+        <span class="number">0{index + 1}</span>
+        <div>
+          <p class="meta">{post.date} · {post.topic}</p>
+          <h2>{post.title}</h2>
+        </div>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .post-list {
+    border-top: 1px solid var(--ink);
+  }
+
+  article {
+    align-items: start;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 3rem 1fr auto;
+    padding: clamp(1.75rem, 4vw, 3.5rem) 0;
+    transition: padding 220ms ease;
+  }
+
+  article:hover {
+    padding-left: 0.75rem;
+  }
+
+  .number,
+  .meta,
+  .arrow {
+    color: var(--muted);
+    font-size: 0.7rem;
+  }
+
+  .meta {
+    margin-bottom: 0.8rem;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.65rem, 3.2vw, 3.1rem);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin: 0;
+    max-width: 860px;
+  }
+
+  .arrow {
+    color: var(--ink);
+    font-size: 1rem;
+  }
+</style>

@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout current="/">
+  <section class="hero">
+    <div class="hero-heading">
+      <p class="eyebrow">Taiwan · Somewhere online</p>
+      <h1>Hello, I’m<br /><em>Aquila.</em></h1>
+    </div>
+
+    <div class="hero-copy">
+      <p>
+        I make thoughtful things for the web, write down what I learn, and carry a camera wherever I go.
+      </p>
+      <a class="text-link" href="/portfolio">See selected work <span>↗</span></a>
+    </div>
+  </section>
+
+  <section class="notes" aria-labelledby="notes-title">
+    <div>
+      <p class="eyebrow">Currently</p>
+      <h2 id="notes-title">A quiet collection<br />of things that matter.</h2>
+    </div>
+    <div class="note-list">
+      <a href="/blog">
+        <span>Writing about design, code, and the in-between</span>
+        <span>Blog ↗</span>
+      </a>
+      <a href="/portfolio">
+        <span>Building useful, human digital experiences</span>
+        <span>Work ↗</span>
+      </a>
+      <a href="/photo">
+        <span>Keeping fragments of places I pass through</span>
+        <span>Photo ↗</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    align-items: end;
+    display: grid;
+    gap: clamp(3rem, 9vw, 9rem);
+    grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr);
+    min-height: min(760px, calc(100vh - 7rem));
+    padding: clamp(6rem, 14vw, 13rem) 0 clamp(5rem, 9vw, 8rem);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 11.5vw, 11rem);
+    font-weight: 400;
+    letter-spacing: -0.075em;
+    line-height: 0.77;
+    margin: 0;
+  }
+
+  h1 em {
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .hero-copy {
+    border-top: 1px solid var(--line);
+    padding-top: 1.4rem;
+  }
+
+  .hero-copy p {
+    color: var(--muted);
+    font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+    line-height: 1.8;
+  }
+
+  .text-link {
+    border-bottom: 1px solid var(--ink);
+    display: inline-flex;
+    font-size: 0.78rem;
+    gap: 1.5rem;
+    margin-top: 1.6rem;
+    padding-bottom: 0.45rem;
+    text-decoration: none;
+  }
+
+  .text-link span {
+    transition: transform 180ms ease;
+  }
+
+  .text-link:hover span {
+    transform: translate(3px, -3px);
+  }
+
+  .notes {
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 4rem;
+    grid-template-columns: 0.8fr 1.2fr;
+    padding-top: clamp(4rem, 8vw, 7rem);
+  }
+
+  .notes h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 4rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+  }
+
+  .note-list a {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    font-size: 0.78rem;
+    gap: 2rem;
+    justify-content: space-between;
+    line-height: 1.5;
+    padding: 1.5rem 0;
+    text-decoration: none;
+  }
+
+  .note-list a:first-child {
+    border-top: 1px solid var(--line);
+  }
+
+  .note-list a span:last-child {
+    color: var(--muted);
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 760px) {
+    .hero {
+      align-items: start;
+      grid-template-columns: 1fr;
+      min-height: 0;
+      padding-top: 6rem;
+    }
+
+    .hero-copy {
+      max-width: 430px;
+    }
+
+    .notes {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

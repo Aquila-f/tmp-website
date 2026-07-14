@@ -1,0 +1,26 @@
+<footer>
+  <p>© {new Date().getFullYear()} Aquila</p>
+  <p>Made slowly, with care.</p>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    display: flex;
+    font-size: 0.72rem;
+    justify-content: space-between;
+    margin-top: clamp(5rem, 12vw, 10rem);
+    padding: 1.35rem 0 2.5rem;
+  }
+
+  footer p {
+    margin: 0;
+  }
+
+  @media (max-width: 480px) {
+    footer p:last-child {
+      display: none;
+    }
+  }
+</style>

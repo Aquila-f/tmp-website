@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = [
+  { n: '01', year: '2026', title: 'Independent archive', tags: 'Art direction · Web design', tone: 'clay' },
+  { n: '02', year: '2025', title: 'A slower reading app', tags: 'Product · Interface', tone: 'moss' },
+  { n: '03', year: '2025', title: 'Notes from elsewhere', tags: 'Identity · Editorial', tone: 'ink' },
+];
+---
+
+<BaseLayout title="Portfolio — Aquila" current="/portfolio">
+  <header class="page-intro">
+    <p class="eyebrow">Selected work · 2025—26</p>
+    <h1>Portfolio</h1>
+    <p class="summary">Digital work shaped by clarity, curiosity, and an attention to how things feel in use.</p>
+  </header>
+
+  <section class="projects" aria-label="Selected projects">
+    {projects.map((project) => (
+      <article>
+        <div class:list={['project-image', project.tone]}>
+          <span class="shape" aria-hidden="true"></span>
+          <span class="project-number">{project.n}</span>
+        </div>
+        <div class="project-info">
+          <div>
+            <h2>{project.title}</h2>
+            <p>{project.tags}</p>
+          </div>
+          <span>{project.year}</span>
+        </div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .projects {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 6rem) clamp(1.5rem, 3vw, 3rem);
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  article:nth-child(3) {
+    grid-column: 2;
+  }
+
+  .project-image {
+    align-items: center;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .clay { background: #c5a28c; }
+  .moss { background: #747a62; }
+  .ink { background: #333b3b; }
+
+  .shape {
+    border: 1px solid rgba(244, 240, 230, 0.75);
+    height: 58%;
+    transform: rotate(8deg);
+    transition: transform 600ms cubic-bezier(.2,.8,.2,1);
+    width: 34%;
+  }
+
+  .moss .shape {
+    border-radius: 50%;
+    height: 52%;
+    transform: none;
+    width: 52%;
+  }
+
+  .ink .shape {
+    border-width: 0 0 1px 1px;
+    transform: rotate(-45deg);
+  }
+
+  article:hover .shape {
+    transform: rotate(0deg) scale(1.06);
+  }
+
+  .project-number {
+    bottom: 1rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.68rem;
+    position: absolute;
+    right: 1rem;
+  }
+
+  .project-info {
+    align-items: start;
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+    padding-top: 1rem;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.5vw, 2.4rem);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    margin-bottom: 0.45rem;
+  }
+
+  .project-info p,
+  .project-info > span {
+    color: var(--muted);
+    font-size: 0.68rem;
+  }
+
+  @media (max-width: 650px) {
+    .projects {
+      grid-template-columns: 1fr;
+    }
+
+    article:nth-child(3) {
+      grid-column: 1;
+    }
+  }
+</style>
