@@ -1,21 +1,21 @@
 ---
 import { getCollection, render } from 'astro:content';
-import ReadingLayout from '../../../layouts/ReadingLayout.astro';
+import TechnicalNoteLayout from '../../../layouts/TechnicalNoteLayout.astro';
 import {
-  getArticleSlug,
-  isSeries,
-  isSeriesArticle,
-  sortArticles,
-  type SeriesArticle,
-} from '../../../lib/reading';
+  getEntrySlug,
+  isTechnicalNote,
+  isTechnicalSeries,
+  sortTechnicalNotes,
+  type TechnicalNoteEntry,
+} from '../../../lib/blog';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('reading');
-  const seriesEntries = entries.filter(isSeries);
-  const articles = entries.filter(isSeriesArticle);
+  const entries = await getCollection('blog');
+  const seriesEntries = entries.filter(isTechnicalSeries);
+  const articles = entries.filter(isTechnicalNote);
 
   return articles.map((article) => {
-    const siblings = sortArticles(articles.filter((entry) => entry.data.series === article.data.series));
+    const siblings = sortTechnicalNotes(articles.filter((entry) => entry.data.series === article.data.series));
     const index = siblings.findIndex((entry) => entry.id === article.id);
     const series = seriesEntries.find((entry) => entry.data.series === article.data.series);
 
@@ -24,7 +24,7 @@ export async function getStaticPaths() {
     return {
       params: {
         series: article.data.series,
-        slug: getArticleSlug(article),
+        slug: getEntrySlug(article),
       },
       props: {
         article,
@@ -37,14 +37,14 @@ export async function getStaticPaths() {
 }
 
 const { article, seriesTitle, previous, next } = Astro.props as {
-  article: SeriesArticle;
+  article: TechnicalNoteEntry;
   seriesTitle: string;
-  previous?: SeriesArticle;
-  next?: SeriesArticle;
+  previous?: TechnicalNoteEntry;
+  next?: TechnicalNoteEntry;
 };
 const { Content } = await render(article);
 ---
 
-<ReadingLayout {article} {seriesTitle} {previous} {next}>
+<TechnicalNoteLayout {article} {seriesTitle} {previous} {next}>
   <Content />
-</ReadingLayout>
+</TechnicalNoteLayout>

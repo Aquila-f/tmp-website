@@ -1,5 +1,5 @@
 ---
-import { formatReadingDate } from '../lib/reading';
+import { formatBlogDate } from '../lib/blog';
 import BaseLayout from './BaseLayout.astro';
 
 type ArticleLink = {
@@ -34,13 +34,13 @@ const {
 ---
 
 <BaseLayout title={`${title} — Aquila`} {description} {current}>
-  <article class="reading-article">
+  <article class="article">
     <header class="article-header">
       <a class="back" href={backHref}>← {backLabel}</a>
 
       <div class="article-meta">
         <span>{metaLabel}</span>
-        <time datetime={date?.toISOString()}>{formatReadingDate(date)}</time>
+        <time datetime={date?.toISOString()}>{formatBlogDate(date)}</time>
       </div>
 
       <h1>{title}</h1>
@@ -76,7 +76,7 @@ const {
 </BaseLayout>
 
 <style>
-  .reading-article {
+  .article {
     margin: 0 auto;
     max-width: 1120px;
   }
@@ -221,14 +221,14 @@ const {
   }
 
   .prose :global(code) {
-    background: rgba(25, 27, 26, 0.06);
+    background: var(--code-inline);
     font-family: var(--font-mono);
     font-size: 0.86em;
     padding: 0.16em 0.35em;
   }
 
   .prose :global(pre) {
-    background: #242725 !important;
+    background: var(--code-block) !important;
     border-radius: 0;
     line-height: 1.65;
     overflow-x: auto;

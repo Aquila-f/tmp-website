@@ -1,19 +1,19 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../../layouts/ArticleLayout.astro';
-import { getArticleSlug, isBookNote, type BookNote } from '../../../lib/reading';
+import { getEntrySlug, isBookNote, type BookNoteEntry } from '../../../lib/blog';
 import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
-  const notes = (await getCollection('reading')).filter(isBookNote);
+  const notes = (await getCollection('blog')).filter(isBookNote);
 
   return notes.map((note) => ({
-    params: { slug: getArticleSlug(note) },
+    params: { slug: getEntrySlug(note) },
     props: { note },
   }));
 }
 
-const { note } = Astro.props as { note: BookNote };
+const { note } = Astro.props as { note: BookNoteEntry };
 const { Content } = await render(note);
 ---
 

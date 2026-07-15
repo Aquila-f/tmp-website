@@ -1,0 +1,118 @@
+---
+import { formatBlogDate } from '../../lib/blog';
+
+const {
+  href,
+  index,
+  title,
+  description,
+  updated,
+  meta,
+} = Astro.props as {
+  href: string;
+  index: number;
+  title: string;
+  description?: string;
+  updated?: Date;
+  meta?: string;
+};
+---
+
+<a class="blog-row" {href}>
+  <span class="number">{String(index + 1).padStart(2, '0')}</span>
+
+  <div class="copy">
+    <h3>{title}</h3>
+    {description && <p class="description">{description}</p>}
+  </div>
+
+  <div class="meta">
+    {meta && <span>{meta}</span>}
+    <span>Updated {formatBlogDate(updated)}</span>
+  </div>
+
+  <span class="arrow" aria-hidden="true">↗</span>
+</a>
+
+<style>
+  .blog-row {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 3rem);
+    grid-template-columns: 2.5rem minmax(0, 1fr) minmax(9rem, auto) 1rem;
+    min-height: 7.25rem;
+    padding: 1.4rem 0;
+    text-decoration: none;
+  }
+
+  .number,
+  .meta,
+  .arrow {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  h3 {
+    font-family: var(--font-body);
+    font-size: clamp(1.08rem, 1.7vw, 1.35rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin: 0 0 0.35rem;
+    transition: color 180ms ease;
+  }
+
+  .description {
+    color: var(--muted);
+    display: -webkit-box;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 650px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .meta {
+    display: grid;
+    gap: 0.35rem;
+    white-space: nowrap;
+  }
+
+  .arrow {
+    color: var(--ink);
+    font-size: 0.85rem;
+    transition: transform 180ms ease;
+  }
+
+  .blog-row:hover h3 { color: var(--accent); }
+  .blog-row:hover .arrow { transform: translate(3px, -3px); }
+
+  @media (max-width: 700px) {
+    .blog-row {
+      align-items: start;
+      gap: 0.8rem 1rem;
+      grid-template-columns: 2rem minmax(0, 1fr) 1rem;
+      padding: 1.25rem 0;
+    }
+
+    .number { padding-top: 0.2rem; }
+    .copy { grid-column: 2; }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1rem;
+      grid-column: 2;
+    }
+
+    .arrow {
+      grid-column: 3;
+      grid-row: 1;
+      padding-top: 0.15rem;
+    }
+  }
+</style>

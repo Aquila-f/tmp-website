@@ -1,0 +1,39 @@
+---
+import type { TechnicalNoteEntry } from '../lib/blog';
+import { getTechnicalNoteHref, getTechnicalSeriesHref } from '../lib/blog';
+import ArticleLayout from './ArticleLayout.astro';
+
+const {
+  article,
+  seriesTitle,
+  previous,
+  next,
+} = Astro.props as {
+  article: TechnicalNoteEntry;
+  seriesTitle: string;
+  previous?: TechnicalNoteEntry;
+  next?: TechnicalNoteEntry;
+};
+---
+
+<ArticleLayout
+  title={article.data.title}
+  description={article.data.description ?? `Reading notes from ${seriesTitle}.`}
+  backHref={getTechnicalSeriesHref(article.data.series)}
+  backLabel={seriesTitle}
+  metaLabel={`Note ${article.data.order}`}
+  date={article.data.date}
+  tags={article.data.tags}
+  previous={previous && {
+    href: getTechnicalNoteHref(previous),
+    label: 'Previous',
+    title: previous.data.title,
+  }}
+  next={next && {
+    href: getTechnicalNoteHref(next),
+    label: 'Next',
+    title: next.data.title,
+  }}
+>
+  <slot />
+</ArticleLayout>

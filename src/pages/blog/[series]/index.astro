@@ -2,32 +2,32 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import {
-  formatReadingDate,
-  getArticleHref,
-  isSeries,
-  isSeriesArticle,
-  sortArticles,
-  type SeriesArticle,
-  type SeriesEntry,
-} from '../../../lib/reading';
+  formatBlogDate,
+  getTechnicalNoteHref,
+  isTechnicalNote,
+  isTechnicalSeries,
+  sortTechnicalNotes,
+  type TechnicalNoteEntry,
+  type TechnicalSeriesEntry,
+} from '../../../lib/blog';
 import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('reading');
-  const articles = entries.filter(isSeriesArticle);
+  const entries = await getCollection('blog');
+  const articles = entries.filter(isTechnicalNote);
 
-  return entries.filter(isSeries).map((series) => ({
+  return entries.filter(isTechnicalSeries).map((series) => ({
     params: { series: series.data.series },
     props: {
       series,
-      articles: sortArticles(articles.filter((article) => article.data.series === series.data.series)),
+      articles: sortTechnicalNotes(articles.filter((article) => article.data.series === series.data.series)),
     },
   }));
 }
 
 const { series, articles } = Astro.props as {
-  series: SeriesEntry;
-  articles: SeriesArticle[];
+  series: TechnicalSeriesEntry;
+  articles: TechnicalNoteEntry[];
 };
 const { Content } = await render(series);
 ---
@@ -50,13 +50,13 @@ const { Content } = await render(series);
 
   <section class="article-list" aria-label={`${series.data.title} notes`}>
     {articles.map((article) => (
-      <a href={getArticleHref(article)}>
+      <a href={getTechnicalNoteHref(article)}>
         <span class="order">{String(article.data.order).padStart(2, '0')}</span>
         <div>
           <h2>{article.data.title}</h2>
           {article.data.description && <p>{article.data.description}</p>}
         </div>
-        <time datetime={article.data.date?.toISOString()}>{formatReadingDate(article.data.date)}</time>
+        <time datetime={article.data.date?.toISOString()}>{formatBlogDate(article.data.date)}</time>
         <span class="arrow" aria-hidden="true">↗</span>
       </a>
     ))}

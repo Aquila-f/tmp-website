@@ -1,29 +1,29 @@
 ---
-import { getCollection, render, type CollectionEntry } from 'astro:content';
-import PostLayout from '../../../../layouts/PostLayout.astro';
-import { getPostRoute, sortPosts } from '../../../../lib/posts';
+import { getCollection, render } from 'astro:content';
+import EssayLayout from '../../../../layouts/EssayLayout.astro';
+import { getEssayRoute, isEssay, sortEssays, type EssayEntry } from '../../../../lib/blog';
 
 export async function getStaticPaths() {
-  const posts = sortPosts(await getCollection('posts'));
+  const essays = sortEssays((await getCollection('blog')).filter(isEssay));
 
-  return posts.map((post, index) => ({
-    params: getPostRoute(post),
+  return essays.map((post, index) => ({
+    params: getEssayRoute(post),
     props: {
       post,
-      newer: posts[index - 1],
-      older: posts[index + 1],
+      newer: essays[index - 1],
+      older: essays[index + 1],
     },
   }));
 }
 
 const { post, older, newer } = Astro.props as {
-  post: CollectionEntry<'posts'>;
-  older?: CollectionEntry<'posts'>;
-  newer?: CollectionEntry<'posts'>;
+  post: EssayEntry;
+  older?: EssayEntry;
+  newer?: EssayEntry;
 };
 const { Content } = await render(post);
 ---
 
-<PostLayout {post} {older} {newer}>
+<EssayLayout {post} {older} {newer}>
   <Content />
-</PostLayout>
+</EssayLayout>

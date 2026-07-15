@@ -1,0 +1,34 @@
+---
+import type { EssayEntry } from '../lib/blog';
+import { getEssayHref } from '../lib/blog';
+import { withBase } from '../lib/url';
+import ArticleLayout from './ArticleLayout.astro';
+
+const { post, older, newer } = Astro.props as {
+  post: EssayEntry;
+  older?: EssayEntry;
+  newer?: EssayEntry;
+};
+---
+
+<ArticleLayout
+  title={post.data.title}
+  description={post.data.description ?? 'An essay by Aquila.'}
+  backHref={withBase('/blog/')}
+  backLabel="All writing"
+  metaLabel="Essay"
+  date={post.data.date}
+  tags={post.data.tags}
+  previous={older && {
+    href: getEssayHref(older),
+    label: 'Older',
+    title: older.data.title,
+  }}
+  next={newer && {
+    href: getEssayHref(newer),
+    label: 'Newer',
+    title: newer.data.title,
+  }}
+>
+  <slot />
+</ArticleLayout>

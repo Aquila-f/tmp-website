@@ -1,13 +1,17 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getPostHref, sortPosts } from '../lib/posts';
+import {
+  formatBlogDate,
+  getBlogPostHref,
+  isBlogPost,
+  sortBlogPosts,
+} from '../lib/blog';
 import { getProjectHref, sortProjects } from '../lib/portfolio';
-import { formatReadingDate } from '../lib/reading';
 import { withBase } from '../lib/url';
 
 const projects = sortProjects(await getCollection('portfolio')).slice(0, 3);
-const posts = sortPosts(await getCollection('posts')).slice(0, 2);
+const recentPosts = sortBlogPosts((await getCollection('blog')).filter(isBlogPost)).slice(0, 3);
 
 const experience = [
   {
@@ -43,7 +47,7 @@ const experience = [
   current="/"
 >
   <header class="home-intro" aria-labelledby="home-title">
-    <p class="eyebrow">Aquila Ju</p>
+    <p class="eyebrow">Aquila Wu</p>
     <div class="intro-copy">
       <h1 id="home-title">Senior engineer working on computer vision and applied AI.</h1>
       <p>
@@ -108,9 +112,9 @@ const experience = [
     </header>
 
     <div class="post-list">
-      {posts.map((post) => (
-        <a href={getPostHref(post)}>
-          <time datetime={post.data.date.toISOString()}>{formatReadingDate(post.data.date)}</time>
+      {recentPosts.map((post) => (
+        <a href={getBlogPostHref(post)}>
+          <time datetime={post.data.date?.toISOString()}>{formatBlogDate(post.data.date)}</time>
           <h3>{post.data.title}</h3>
           <span aria-hidden="true">↗</span>
         </a>
@@ -191,7 +195,7 @@ const experience = [
   .timeline time {
     color: var(--muted);
     font-family: var(--font-mono);
-    font-size: 0.63rem;
+    font-size: 0.72rem;
     padding-top: 0.25rem;
   }
 
@@ -242,8 +246,8 @@ const experience = [
   }
 
   .entry p { margin: 0; }
-  .role { font-size: 0.78rem; }
-  .detail { color: var(--muted); font-size: 0.76rem; line-height: 1.6; }
+  .role { font-size: 0.84rem; }
+  .detail { color: var(--muted); font-size: 0.82rem; line-height: 1.6; }
 
   .work-list,
   .post-list { border-top: 1px solid var(--ink); }
@@ -267,7 +271,7 @@ const experience = [
   .post-list span {
     color: var(--muted);
     font-family: var(--font-mono);
-    font-size: 0.63rem;
+    font-size: 0.72rem;
   }
 
   .work-list h3,
@@ -281,7 +285,7 @@ const experience = [
 
   .work-list p {
     color: var(--muted);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     margin: 0.25rem 0 0;
   }
 
