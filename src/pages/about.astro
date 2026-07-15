@@ -38,7 +38,41 @@ const { Content } = await render(about);
         <div><dt>Focus</dt><dd>Computer vision · Applied AI</dd></div>
         <div><dt>Based in</dt><dd>Taipei, Taiwan</dd></div>
       </dl>
-      <a class="cv-link" href={withBase('/cv/')}>View full CV <span>↗</span></a>
+      <nav class="profile-links" aria-label="Profile links">
+        <a href="https://www.linkedin.com/in/tai-lin-wu/" target="_blank" rel="noreferrer">
+          <span>LinkedIn</span><span aria-hidden="true">↗</span>
+        </a>
+        <a href="https://github.com/Aquila-f" target="_blank" rel="noreferrer">
+          <span>GitHub</span><span aria-hidden="true">↗</span>
+        </a>
+        <a href={withBase('/cv/')}>
+          <span>Full CV</span><span aria-hidden="true">→</span>
+        </a>
+      </nav>
+
+      <section class="leetcode" aria-labelledby="leetcode-title">
+        <div class="leetcode-heading">
+          <h2 id="leetcode-title">LeetCode</h2>
+        </div>
+        <a
+          class="leetcode-card"
+          href="https://leetcode.com/u/aquila_w/"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="View aquila_w on LeetCode"
+        >
+          <img
+            src="https://leetcard.jacoblin.cool/aquila_w?ext=contest&theme=light"
+            data-light-src="https://leetcard.jacoblin.cool/aquila_w?ext=contest&theme=light"
+            data-dark-src="https://leetcard.jacoblin.cool/aquila_w?ext=contest&theme=dark"
+            alt="LeetCode contest statistics for aquila_w"
+            width="500"
+            height="400"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </section>
     </aside>
 
     <ProfileContent>
@@ -51,8 +85,8 @@ const { Content } = await render(about);
   .about-layout {
     align-items: start;
     display: grid;
-    gap: clamp(3rem, 8vw, 8rem);
-    grid-template-columns: minmax(170px, 0.24fr) minmax(0, 0.76fr);
+    gap: clamp(3rem, 7vw, 7rem);
+    grid-template-columns: minmax(250px, 300px) minmax(0, 1fr);
   }
 
   aside { position: sticky; top: 2rem; }
@@ -65,7 +99,7 @@ const { Content } = await render(about);
     width: 100%;
   }
 
-  dl { margin: 1.5rem 0 2rem; max-width: 220px; }
+  dl { margin: 1.5rem 0 2rem; max-width: 300px; }
 
   dl div {
     border-bottom: 1px solid var(--line);
@@ -77,13 +111,53 @@ const { Content } = await render(about);
   dt { color: var(--muted); font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; }
   dd { font-size: 0.76rem; line-height: 1.5; margin: 0; }
 
-  .cv-link {
-    border-bottom: 1px solid var(--ink);
-    display: inline-flex;
-    font-size: 0.76rem;
-    gap: 1rem;
-    padding-bottom: 0.35rem;
+  .profile-links {
+    border-top: 1px solid var(--ink);
+    display: grid;
+    max-width: 300px;
+  }
+
+  .profile-links a {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    font-size: 0.8rem;
+    justify-content: space-between;
+    padding: 0.7rem 0;
     text-decoration: none;
+  }
+
+  .profile-links a span:last-child { color: var(--muted); }
+  .profile-links a:hover span:first-child { color: var(--accent); }
+
+  .leetcode {
+    margin-top: 2.25rem;
+    max-width: 300px;
+  }
+
+  .leetcode-heading {
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.55rem;
+  }
+
+  .leetcode-heading h2 {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .leetcode-card {
+    display: block;
+    text-decoration: none;
+  }
+
+  .leetcode-card img {
+    height: auto;
+    width: 100%;
   }
 
   @media (max-width: 720px) {
@@ -92,3 +166,22 @@ const { Content } = await render(about);
     .portrait { max-width: min(44vw, 190px); }
   }
 </style>
+
+<script>
+  const card = document.querySelector<HTMLImageElement>('.leetcode-card img');
+
+  const syncLeetCodeTheme = () => {
+    if (!card) return;
+    const source = document.documentElement.dataset.theme === 'dark'
+      ? card.dataset.darkSrc
+      : card.dataset.lightSrc;
+    if (source && card.src !== source) card.src = source;
+  };
+
+  syncLeetCodeTheme();
+
+  new MutationObserver(syncLeetCodeTheme).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+</script>
