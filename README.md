@@ -60,7 +60,9 @@ location: Optional location
 
 ## Reading notes
 
-Book and topic notes live in the `reading` content collection. Each series has an overview and each article keeps its own images:
+Reading content is split by purpose rather than source format: multi-part engineering material is a technical series, while general book notes are standalone articles.
+
+Technical series keep an overview and ordered articles:
 
 ```text
 src/content/reading/<series>/
@@ -70,4 +72,30 @@ src/content/reading/<series>/
     └── images/
 ```
 
-Series are listed at `/blog/`, with generated series and article routes beneath it. Article order comes from the frontmatter `order` field.
+Their frontmatter uses `section: technical`; article order comes from the `order` field. Series and article routes are generated below `/blog/<series>/`.
+
+Standalone book notes live here:
+
+```text
+src/content/reading/books/<book-slug>/
+├── index.md
+└── images/
+```
+
+Book-note frontmatter uses `type: article` and `section: book`. These notes link directly from the Blog page to `/blog/books/<book-slug>/`, without an intermediate one-item series page.
+
+## Essays
+
+Standalone essays live in `src/content/posts/` and are also listed at `/blog/`. Their `permalink` frontmatter determines the generated `/posts/YYYY/MM/slug/` route.
+
+## Portfolio
+
+Portfolio case studies keep their Markdown and images together:
+
+```text
+src/content/portfolio/<project>/
+├── index.md
+└── project-image.jpg
+```
+
+They are listed at `/portfolio/`, with detail routes generated from the project directory name.

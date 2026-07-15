@@ -1,12 +1,23 @@
 ---
 import { getCollection } from 'astro:content';
+import PageHeader from '../components/PageHeader.astro';
 import SeriesCard from '../components/reading/SeriesCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { isArticle, isSeries } from '../lib/reading';
+import { getPostHref, sortPosts } from '../lib/posts';
+import {
+  formatReadingDate,
+  getBookNoteHref,
+  isBookNote,
+  isSeries,
+  isSeriesArticle,
+  sortBookNotes,
+} from '../lib/reading';
 
 const entries = await getCollection('reading');
-const seriesEntries = entries.filter(isSeries);
-const articles = entries.filter(isArticle);
+const posts = sortPosts(await getCollection('posts'));
+const seriesEntries = entries.filter(isSeries).filter((entry) => entry.data.section === 'technical');
+const articles = entries.filter(isSeriesArticle);
+const bookNotes = sortBookNotes(entries.filter(isBookNote));
 
 const summaries = seriesEntries
   .map((series) => {
@@ -22,15 +33,148 @@ const summaries = seriesEntries
 ---
 
 <BaseLayout title="Blog — Aquila" current="/blog">
-  <header class="page-intro">
-    <p class="eyebrow">Reading notes · Ideas in progress</p>
-    <h1>Blog</h1>
-    <p class="summary">Long-form notes from books, software design, and the systems underneath everyday tools.</p>
-  </header>
+  <PageHeader
+    eyebrow="Writing · Notes"
+    title="Blog"
+    description="Essays, technical study notes, and books that changed how I understand work and life."
+  />
 
-  <section class="series-list" aria-label="Reading series">
-    {summaries.map(({ series, count, latest }, index) => (
-      <SeriesCard series={series} count={count} latest={latest} index={index} />
-    ))}
+  <section class="blog-section" aria-labelledby="essays-title">
+    <div class="section-heading">
+      <p class="eyebrow">Writing</p>
+      <h2 id="essays-title">Essays</h2>
+    </div>
+
+    <div class="post-list">
+      {posts.map((post) => (
+        <a href={getPostHref(post)}>
+          <time datetime={post.data.date.toISOString()}>{formatReadingDate(post.data.date)}</time>
+          <div>
+            <h3>{post.data.title}</h3>
+            {post.data.description && <p>{post.data.description}</p>}
+          </div>
+          <span aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="blog-section" aria-labelledby="technical-title">
+    <div class="section-heading">
+      <p class="eyebrow">Engineering</p>
+      <h2 id="technical-title">Technical notes</h2>
+    </div>
+
+    <div class="series-list">
+      {summaries.map(({ series, count, latest }, index) => (
+        <SeriesCard series={series} count={count} latest={latest} index={index} />
+      ))}
+    </div>
+  </section>
+
+  <section class="blog-section" aria-labelledby="books-title">
+    <div class="section-heading">
+      <p class="eyebrow">Reading</p>
+      <h2 id="books-title">Book notes</h2>
+    </div>
+
+    <div class="post-list book-list">
+      {bookNotes.map((note) => (
+        <a href={getBookNoteHref(note)}>
+          <time datetime={note.data.date?.toISOString()}>{formatReadingDate(note.data.date)}</time>
+          <div>
+            <h3>{note.data.title}</h3>
+            {note.data.description && <p>{note.data.description}</p>}
+          </div>
+          <span aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
   </section>
 </BaseLayout>
+
+<style>
+  .blog-section + .blog-section {
+    margin-top: clamp(4rem, 8vw, 6.5rem);
+  }
+
+  .section-heading {
+    display: grid;
+    gap: 0.55rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-heading .eyebrow {
+    margin: 0 0 0.35rem;
+  }
+
+  .section-heading h2 {
+    font-family: var(--font-body);
+    font-size: clamp(1.45rem, 2.5vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .post-list {
+    border-top: 1px solid var(--ink);
+  }
+
+  .post-list a {
+    align-items: start;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+    grid-template-columns: 7rem minmax(0, 1fr) 1rem;
+    min-height: 6.75rem;
+    padding: 1.35rem 0;
+    text-decoration: none;
+  }
+
+  .post-list time,
+  .post-list p,
+  .post-list span {
+    color: var(--muted);
+    font-size: 0.66rem;
+  }
+
+  .post-list h3 {
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin: 0 0 0.4rem;
+    transition: color 180ms ease;
+  }
+
+  .post-list p {
+    line-height: 1.7;
+    margin: 0;
+    max-width: 650px;
+  }
+
+  .post-list span {
+    color: var(--ink);
+    transition: transform 180ms ease;
+  }
+
+  .post-list a:hover h3 {
+    color: var(--accent);
+  }
+
+  .post-list a:hover span {
+    transform: translate(3px, -3px);
+  }
+
+  @media (max-width: 620px) {
+    .post-list a {
+      grid-template-columns: minmax(0, 1fr) 1rem;
+    }
+
+    .post-list time {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

@@ -1,5 +1,5 @@
 ---
-import type { ReadingEntry } from '../../lib/reading';
+import type { SeriesEntry } from '../../lib/reading';
 import { formatReadingDate, getSeriesHref } from '../../lib/reading';
 
 const {
@@ -8,7 +8,7 @@ const {
   latest,
   index,
 } = Astro.props as {
-  series: ReadingEntry;
+  series: SeriesEntry;
   count: number;
   latest?: Date;
   index: number;
@@ -19,7 +19,7 @@ const {
   <span class="number">{String(index + 1).padStart(2, '0')}</span>
 
   <div class="copy">
-    <p class="kind">Reading series</p>
+    <p class="kind">Technical series</p>
     <h2>{series.data.title}</h2>
     {series.data.description && <p class="description">{series.data.description}</p>}
   </div>
@@ -34,12 +34,13 @@ const {
 
 <style>
   .series-card {
-    align-items: start;
+    align-items: center;
     border-bottom: 1px solid var(--line);
     display: grid;
     gap: clamp(1.25rem, 3vw, 3rem);
     grid-template-columns: 2.5rem minmax(0, 1fr) auto 1rem;
-    padding: clamp(2rem, 4vw, 3.75rem) 0;
+    min-height: 6.75rem;
+    padding: 1.35rem 0;
     text-decoration: none;
   }
 
@@ -57,17 +58,17 @@ const {
 
   .kind {
     letter-spacing: 0.08em;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.35rem;
     text-transform: uppercase;
   }
 
   h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 3.6vw, 3.6rem);
-    font-weight: 400;
-    letter-spacing: -0.045em;
-    line-height: 1;
-    margin-bottom: 1rem;
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 0.4rem;
     transition: color 180ms ease;
   }
 
@@ -82,14 +83,14 @@ const {
   .meta {
     display: grid;
     gap: 0.5rem;
-    padding-top: 1.5rem;
+    padding-top: 0;
     white-space: nowrap;
   }
 
   .arrow {
     color: var(--ink);
     font-size: 0.9rem;
-    padding-top: 1.4rem;
+    padding-top: 0;
     transition: transform 180ms ease;
   }
 

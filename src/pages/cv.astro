@@ -1,0 +1,59 @@
+---
+import { getEntry, render } from 'astro:content';
+import PageHeader from '../components/PageHeader.astro';
+import ProfileContent from '../components/ProfileContent.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/url';
+
+const cv = await getEntry('profile', 'cv');
+if (!cv) throw new Error('Missing profile/cv.md');
+const { Content } = await render(cv);
+---
+
+<BaseLayout title="CV — Aquila" description={cv.data.description} current="/about">
+  <PageHeader eyebrow="Curriculum vitae" title={cv.data.title} description={cv.data.description} />
+
+  <div class="cv-layout">
+    <aside>
+      <a href={withBase('/about/')}>← About</a>
+      <p>Last updated July 2026</p>
+    </aside>
+    <ProfileContent>
+      <Content />
+    </ProfileContent>
+  </div>
+</BaseLayout>
+
+<style>
+  .cv-layout {
+    align-items: start;
+    display: grid;
+    gap: clamp(3rem, 8vw, 8rem);
+    grid-template-columns: minmax(7rem, 0.28fr) minmax(0, 1fr);
+  }
+
+  aside {
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 0.7rem;
+    padding-top: 0.8rem;
+  }
+
+  aside a,
+  aside p {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    margin: 0;
+    text-decoration: none;
+  }
+
+  @media (max-width: 640px) {
+    .cv-layout { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    aside { display: none; }
+    .cv-layout { display: block; }
+  }
+</style>

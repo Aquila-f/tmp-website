@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import type { PortfolioEntry } from '../lib/portfolio';
+import { getProjectHref } from '../lib/portfolio';
+import { withBase } from '../lib/url';
+import ArticleLayout from './ArticleLayout.astro';
+
+const { project, older, newer } = Astro.props as {
+  project: PortfolioEntry;
+  older?: PortfolioEntry;
+  newer?: PortfolioEntry;
+};
+---
+
+<ArticleLayout
+  title={project.data.title}
+  description={project.data.excerpt}
+  backHref={withBase('/portfolio/')}
+  backLabel="All work"
+  metaLabel={[project.data.category ?? 'Case study', project.data.venue].filter(Boolean).join(' · ')}
+  date={project.data.date}
+  current="/portfolio"
+  previous={older && {
+    href: getProjectHref(older),
+    label: 'Previous project',
+    title: older.data.title,
+  }}
+  next={newer && {
+    href: getProjectHref(newer),
+    label: 'Next project',
+    title: newer.data.title,
+  }}
+>
+  {project.data.image && (
+    <figure class="project-hero">
+      <Image
+        src={project.data.image}
+        alt={project.data.imageAlt ?? `${project.data.title} project preview`}
+        widths={[640, 800, 1024]}
+        sizes="(max-width: 850px) 100vw, 760px"
+      />
+    </figure>
+  )}
+  {(project.data.paperurl || project.data.citation) && (
+    <aside class="publication-details" aria-label="Publication details">
+      {project.data.venue && <p class="venue">Published at {project.data.venue}</p>}
+      {project.data.citation && <p class="citation" set:html={project.data.citation} />}
+      {project.data.paperurl && (
+        <a href={project.data.paperurl} target="_blank" rel="noreferrer">
+          Read the paper on arXiv <span aria-hidden="true">↗</span>
+        </a>
+      )}
+    </aside>
+  )}
+  <slot />
+</ArticleLayout>
+
+<style>
+  .project-hero {
+    margin: 0 0 clamp(3rem, 7vw, 5rem);
+    margin-left: 50%;
+    transform: translateX(-50%);
+    width: min(1024px, calc(100vw - 2.5rem));
+  }
+
+  .project-hero :global(img) {
+    background: var(--paper-light);
+    height: auto;
+    width: 100%;
+  }
+
+  .publication-details {
+    border-bottom: 1px solid var(--line);
+    border-top: 1px solid var(--ink);
+    margin-bottom: clamp(3rem, 7vw, 5rem);
+    padding: 1.25rem 0;
+  }
+
+  .publication-details .venue {
+    color: var(--accent);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .publication-details .citation {
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.75;
+  }
+
+  .publication-details a {
+    border-bottom: 1px solid var(--ink);
+    display: inline-flex;
+    font-size: 0.72rem;
+    gap: 1rem;
+    padding-bottom: 0.35rem;
+    text-decoration: none;
+  }
+</style>

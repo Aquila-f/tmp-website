@@ -7,6 +7,7 @@ tags:
   - software-architecture
   - oop
 type: series
+section: technical
 series: design-patterns
 ---
 

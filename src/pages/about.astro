@@ -1,0 +1,94 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+import portrait from '../assets/personal.jpg';
+import PageHeader from '../components/PageHeader.astro';
+import ProfileContent from '../components/ProfileContent.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/url';
+
+const about = await getEntry('profile', 'about');
+if (!about) throw new Error('Missing profile/about.md');
+const { Content } = await render(about);
+---
+
+<BaseLayout
+  title="About — Aquila"
+  description={about.data.description}
+  current="/about"
+>
+  <PageHeader
+    eyebrow="Profile"
+    title={about.data.title}
+    description={about.data.description}
+  />
+
+  <div class="about-layout">
+    <aside>
+      <div class="portrait">
+        <Image
+          src={portrait}
+          alt="Portrait of Aquila"
+          widths={[320, 480, 640]}
+          sizes="(max-width: 720px) 44vw, 190px"
+        />
+      </div>
+      <dl>
+        <div><dt>Current</dt><dd>Senior Engineer, Qualcomm</dd></div>
+        <div><dt>Focus</dt><dd>Computer vision · Applied AI</dd></div>
+        <div><dt>Based in</dt><dd>Taipei, Taiwan</dd></div>
+      </dl>
+      <a class="cv-link" href={withBase('/cv/')}>View full CV <span>↗</span></a>
+    </aside>
+
+    <ProfileContent>
+      <Content />
+    </ProfileContent>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-layout {
+    align-items: start;
+    display: grid;
+    gap: clamp(3rem, 8vw, 8rem);
+    grid-template-columns: minmax(170px, 0.24fr) minmax(0, 0.76fr);
+  }
+
+  aside { position: sticky; top: 2rem; }
+  .portrait { aspect-ratio: 4 / 5; max-width: 190px; overflow: hidden; }
+
+  .portrait :global(img) {
+    filter: saturate(0.72) contrast(1.02);
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  dl { margin: 1.5rem 0 2rem; max-width: 220px; }
+
+  dl div {
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.8rem 0;
+  }
+
+  dt { color: var(--muted); font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; }
+  dd { font-size: 0.76rem; line-height: 1.5; margin: 0; }
+
+  .cv-link {
+    border-bottom: 1px solid var(--ink);
+    display: inline-flex;
+    font-size: 0.76rem;
+    gap: 1rem;
+    padding-bottom: 0.35rem;
+    text-decoration: none;
+  }
+
+  @media (max-width: 720px) {
+    .about-layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+    .portrait { max-width: min(44vw, 190px); }
+  }
+</style>

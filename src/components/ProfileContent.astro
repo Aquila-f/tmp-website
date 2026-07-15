@@ -1,0 +1,59 @@
+<div class="profile-content">
+  <slot />
+</div>
+
+<style>
+  .profile-content {
+    font-size: clamp(0.98rem, 1.1vw, 1.06rem);
+    line-height: 1.82;
+    max-width: 760px;
+  }
+
+  .profile-content :global(h2) {
+    border-top: 1px solid var(--line);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 620;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+    margin: 4rem 0 1.3rem;
+    padding-top: 1rem;
+  }
+
+  .profile-content :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .profile-content :global(h3) {
+    font-size: 1.1rem;
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    margin: 2.5rem 0 0.35rem;
+  }
+
+  .profile-content :global(p),
+  .profile-content :global(ul) {
+    margin: 0 0 1.4rem;
+  }
+
+  .profile-content :global(ul) {
+    padding-left: 1.35rem;
+  }
+
+  .profile-content :global(li) {
+    margin: 0.45rem 0;
+    padding-left: 0.25rem;
+  }
+
+  .profile-content :global(li::marker) {
+    color: var(--accent);
+  }
+
+  .profile-content :global(a) {
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.2em;
+  }
+
+  .profile-content :global(em) {
+    color: var(--muted);
+  }
+</style>

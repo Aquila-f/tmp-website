@@ -1,12 +1,18 @@
 ---
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import ReadingLayout from '../../../layouts/ReadingLayout.astro';
-import { getArticleSlug, isArticle, isSeries, sortArticles } from '../../../lib/reading';
+import {
+  getArticleSlug,
+  isSeries,
+  isSeriesArticle,
+  sortArticles,
+  type SeriesArticle,
+} from '../../../lib/reading';
 
 export async function getStaticPaths() {
   const entries = await getCollection('reading');
   const seriesEntries = entries.filter(isSeries);
-  const articles = entries.filter(isArticle);
+  const articles = entries.filter(isSeriesArticle);
 
   return articles.map((article) => {
     const siblings = sortArticles(articles.filter((entry) => entry.data.series === article.data.series));
@@ -31,10 +37,10 @@ export async function getStaticPaths() {
 }
 
 const { article, seriesTitle, previous, next } = Astro.props as {
-  article: CollectionEntry<'reading'>;
+  article: SeriesArticle;
   seriesTitle: string;
-  previous?: CollectionEntry<'reading'>;
-  next?: CollectionEntry<'reading'>;
+  previous?: SeriesArticle;
+  next?: SeriesArticle;
 };
 const { Content } = await render(article);
 ---

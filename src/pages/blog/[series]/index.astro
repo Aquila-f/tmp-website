@@ -1,18 +1,20 @@
 ---
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import {
   formatReadingDate,
   getArticleHref,
-  isArticle,
   isSeries,
+  isSeriesArticle,
   sortArticles,
+  type SeriesArticle,
+  type SeriesEntry,
 } from '../../../lib/reading';
 import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
   const entries = await getCollection('reading');
-  const articles = entries.filter(isArticle);
+  const articles = entries.filter(isSeriesArticle);
 
   return entries.filter(isSeries).map((series) => ({
     params: { series: series.data.series },
@@ -24,8 +26,8 @@ export async function getStaticPaths() {
 }
 
 const { series, articles } = Astro.props as {
-  series: CollectionEntry<'reading'>;
-  articles: CollectionEntry<'reading'>[];
+  series: SeriesEntry;
+  articles: SeriesArticle[];
 };
 const { Content } = await render(series);
 ---
@@ -36,8 +38,8 @@ const { Content } = await render(series);
   current="/blog"
 >
   <header class="series-header">
-    <a class="back" href={withBase('/blog/')}>← All reading notes</a>
-    <p class="eyebrow">Reading series · {String(articles.length).padStart(2, '0')} notes</p>
+    <a class="back" href={withBase('/blog/')}>← All technical notes</a>
+    <p class="eyebrow">Technical series · {String(articles.length).padStart(2, '0')} notes</p>
     <h1>{series.data.title}</h1>
     {series.data.description && <p class="summary">{series.data.description}</p>}
   </header>
@@ -63,7 +65,7 @@ const { Content } = await render(series);
 
 <style>
   .series-header {
-    margin: clamp(4rem, 10vw, 8rem) 0 clamp(3rem, 6vw, 5rem);
+    margin: clamp(3.5rem, 8vw, 6rem) 0 clamp(3rem, 6vw, 4.5rem);
     max-width: 1080px;
   }
 
@@ -76,11 +78,11 @@ const { Content } = await render(series);
   }
 
   h1 {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 8vw, 7.5rem);
-    font-weight: 400;
-    letter-spacing: -0.06em;
-    line-height: 0.94;
+    font-family: var(--font-body);
+    font-size: clamp(2.1rem, 4.3vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.06;
     margin-bottom: 1.5rem;
   }
 
@@ -106,9 +108,9 @@ const { Content } = await render(series);
 
   .series-overview :global(h2) {
     color: var(--ink);
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-size: 1.4rem;
-    font-weight: 400;
+    font-weight: 620;
     margin-bottom: 0.65rem;
   }
 
@@ -135,9 +137,9 @@ const { Content } = await render(series);
   }
 
   h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.4rem, 2.7vw, 2.5rem);
-    font-weight: 400;
+    font-family: var(--font-body);
+    font-size: clamp(1.35rem, 2.4vw, 2.1rem);
+    font-weight: 580;
     letter-spacing: -0.035em;
     line-height: 1.1;
     margin-bottom: 0.65rem;

@@ -8,6 +8,7 @@ tags:
   - databases
   - system-design
 type: series
+section: technical
 series: ddia
 ---
 

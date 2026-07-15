@@ -1,0 +1,29 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import { getProjectSlug, sortProjects } from '../../lib/portfolio';
+
+export async function getStaticPaths() {
+  const projects = sortProjects(await getCollection('portfolio'));
+
+  return projects.map((project, index) => ({
+    params: { slug: getProjectSlug(project) },
+    props: {
+      project,
+      newer: projects[index - 1],
+      older: projects[index + 1],
+    },
+  }));
+}
+
+const { project, older, newer } = Astro.props as {
+  project: CollectionEntry<'portfolio'>;
+  older?: CollectionEntry<'portfolio'>;
+  newer?: CollectionEntry<'portfolio'>;
+};
+const { Content } = await render(project);
+---
+
+<PortfolioLayout {project} {older} {newer}>
+  <Content />
+</PortfolioLayout>
