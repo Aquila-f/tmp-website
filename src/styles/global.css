@@ -7,11 +7,32 @@
   --line-strong: rgba(21, 33, 43, 0.48);
   --accent: #245a78;
   --accent-soft: #dce8ed;
+  --code-block: #20272b;
+  --code-inline: rgba(21, 33, 43, 0.06);
+  --photo-caption: rgba(233, 236, 234, 0.78);
+  --photo-placeholder: #d8ddda;
+  --noise-opacity: 0.018;
   --font-body: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans TC', 'PingFang TC',
     'Microsoft JhengHei', sans-serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
   --font-display: 'Iowan Old Style', 'Noto Serif TC', 'Songti TC', STSong, Georgia,
     'Times New Roman', serif;
+}
+
+:root[data-theme='dark'] {
+  --paper: #1a2328;
+  --paper-light: #232e34;
+  --ink: #d9e0e3;
+  --muted: #9aa5ab;
+  --line: rgba(216, 224, 228, 0.14);
+  --line-strong: rgba(216, 224, 228, 0.42);
+  --accent: #82b1c8;
+  --accent-soft: #253e4b;
+  --code-block: #12191d;
+  --code-inline: rgba(216, 224, 228, 0.07);
+  --photo-caption: rgba(26, 35, 40, 0.82);
+  --photo-placeholder: #27343a;
+  --noise-opacity: 0.02;
 }
 
 * {
@@ -25,6 +46,11 @@ html {
   font-synthesis: none;
   scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 body {
@@ -38,7 +64,7 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E");
   content: '';
   inset: 0;
-  opacity: 0.018;
+  opacity: var(--noise-opacity);
   pointer-events: none;
   position: fixed;
   z-index: 10;

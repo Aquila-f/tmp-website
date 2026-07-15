@@ -45,7 +45,7 @@ const { photo } = Astro.props as { photo: Photo };
 
   .image-frame {
     aspect-ratio: 1;
-    background: #e5e0d6;
+    background: var(--photo-placeholder);
     overflow: hidden;
     outline: none;
     position: relative;
@@ -71,7 +71,7 @@ const { photo } = Astro.props as { photo: Photo };
   .specs {
     align-items: center;
     backdrop-filter: blur(6px);
-    background: rgba(244, 240, 230, 0.72);
+    background: var(--photo-caption);
     bottom: 0.6rem;
     display: flex;
     gap: 0;

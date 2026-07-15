@@ -15,16 +15,52 @@ const links = [
 <header class="site-header">
   <a class="mark" href={withBase('/')} aria-label="Aquila — home">Aquila</a>
 
-  <nav aria-label="Main navigation">
-    {
-      links.map(({ href, label }) => (
-        <a href={withBase(href)} aria-current={current === href ? 'page' : undefined}>
-          {label}
-        </a>
-      ))
-    }
-  </nav>
+  <div class="header-actions">
+    <nav aria-label="Main navigation">
+      {
+        links.map(({ href, label }) => (
+          <a href={withBase(href)} aria-current={current === href ? 'page' : undefined}>
+            {label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.5" />
+        <path class="theme-icon-fill" d="M12 3.5a8.5 8.5 0 0 1 0 17Z" />
+      </svg>
+    </button>
+  </div>
 </header>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+
+  const syncToggle = () => {
+    const isDark = root.dataset.theme === 'dark';
+    const action = `Switch to ${isDark ? 'light' : 'dark'} theme`;
+    toggle?.setAttribute('aria-label', action);
+    toggle?.setAttribute('title', action);
+    themeColor?.setAttribute('content', isDark ? '#1a2328' : '#e9ecea');
+  };
+
+  syncToggle();
+
+  toggle?.addEventListener('click', () => {
+    const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = theme;
+
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {}
+
+    syncToggle();
+  });
+</script>
 
 <style>
   .site-header {
@@ -40,6 +76,12 @@ const links = [
     font-weight: 600;
     letter-spacing: -0.015em;
     text-decoration: none;
+  }
+
+  .header-actions {
+    align-items: center;
+    display: flex;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
   }
 
   nav {
@@ -79,10 +121,51 @@ const links = [
     transform-origin: left;
   }
 
+  .theme-toggle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--line);
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: flex-end;
+    padding: 0.2rem 0 0.2rem clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  .theme-toggle:hover { color: var(--ink); }
+
+  .theme-toggle svg {
+    fill: none;
+    height: 1.05rem;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.6;
+    width: 1.05rem;
+  }
+
+  .theme-toggle .theme-icon-fill {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
   @media (max-width: 560px) {
     .site-header {
       align-items: flex-start;
       gap: 1.5rem;
+      flex-direction: column;
+    }
+
+    .header-actions {
+      align-items: flex-start;
+      justify-content: space-between;
+      width: 100%;
     }
 
     nav {
@@ -90,5 +173,7 @@ const links = [
       gap: 0.65rem 1.35rem;
       grid-template-columns: repeat(2, auto);
     }
+
+    .theme-toggle { padding-left: 1rem; }
   }
 </style>
