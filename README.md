@@ -17,7 +17,7 @@ npm run build
 
 Pushes to `master` are automatically deployed to GitHub Pages at:
 
-`https://aquila-f.github.io/tmp-website/`
+`https://aquila-f.github.io/`
 
 In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions** once before the first deployment.
 
