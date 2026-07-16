@@ -10,7 +10,8 @@ if (!input) {
 }
 
 const inputPath = resolve(input);
-const extension = extname(inputPath).toLowerCase();
+const inputExtension = extname(inputPath);
+const extension = inputExtension.toLowerCase();
 
 if (!['.jpg', '.jpeg'].includes(extension)) {
   throw new Error('Only JPEG photos are supported.');
@@ -18,7 +19,7 @@ if (!['.jpg', '.jpeg'].includes(extension)) {
 
 await access(inputPath);
 
-const id = basename(inputPath, extension)
+const id = basename(inputPath, inputExtension)
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, '-')
   .replace(/^-|-$/g, '');
